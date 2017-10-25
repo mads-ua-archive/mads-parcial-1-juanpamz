@@ -28,6 +28,8 @@ import models.UsuarioRepository;
 import models.JPAUsuarioRepository;
 import models.TareaRepository;
 import models.JPATareaRepository;
+import services.TareaService;
+import services.TareaServiceException;
 
 public class Parcial1 {
    static Database db;
@@ -61,6 +63,10 @@ public class Parcial1 {
       return injector.instanceOf(UsuarioRepository.class);
    }
 
+   private TareaService newTareaService() {
+      return injector.instanceOf(TareaService.class);
+    }
+
    @Test
    public void testEjemplo() {
       UsuarioRepository usuarioRepository = newUsuarioRepository();
@@ -69,5 +75,28 @@ public class Parcial1 {
       Tarea tarea = tareaRepository.findById(1000L);
       assertEquals(2, usuario.getTareas().size());
       assertTrue(usuario.getTareas().contains(tarea));
+   }
+
+   @Test
+   public void testpr2() {
+      UsuarioRepository usuarioRepository = newUsuarioRepository();
+      TareaService tareaService = newTareaService();
+      Tarea tarea = new Tarea();
+      Usuario usuario = usuarioRepository.findById(1000L);
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 1");
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 2");
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 3");
+      assertEquals(4, usuario.getTareas().size());
+   }
+   @Test
+   public void testpr21() {
+      UsuarioRepository usuarioRepository = newUsuarioRepository();
+      TareaService tareaService = newTareaService();
+      Tarea tarea = new Tarea();
+      Usuario usuario = usuarioRepository.findById(1000L);
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 1");
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 2");
+      tarea = tareaService.nuevaTarea(usuario.getId(), "tarea 2");
+      assertEquals(3, usuario.getTareas().size());
    }
 }

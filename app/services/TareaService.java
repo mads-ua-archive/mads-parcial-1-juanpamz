@@ -10,6 +10,7 @@ import models.Usuario;
 import models.UsuarioRepository;
 import models.Tarea;
 import models.TareaRepository;
+import services.TareaService;
 
 
 public class TareaService {
@@ -39,7 +40,15 @@ public class TareaService {
       if (usuario == null) {
          throw new TareaServiceException("Usuario no existente");
       }
+
+      List<Tarea> listaTareas = new ArrayList<Tarea>(usuario.getTareas());
+      for(int i=0; i<listaTareas.size(); i++){
+        if(listaTareas.get(i).getTitulo() == titulo){
+          return null;
+        }
+      }
       Tarea tarea = new Tarea(usuario, titulo);
+      System.out.println("AAAAAAAA" + tarea);
       return tareaRepository.add(tarea);
    }
 
