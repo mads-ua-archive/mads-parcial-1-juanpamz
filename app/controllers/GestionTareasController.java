@@ -8,7 +8,7 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.data.DynamicForm;
 import play.Logger;
-
+import java.util.Collections;
 import java.util.List;
 
 import services.UsuarioService;
@@ -67,6 +67,36 @@ public class GestionTareasController extends Controller {
          Usuario usuario = usuarioService.findUsuarioPorId(idUsuario);
          List<Tarea> tareas = tareaService.allTareasUsuario(idUsuario);
          return ok(listaTareas.render(tareas, usuario, aviso));
+      }
+   }
+
+   @Security.Authenticated(ActionAuthenticator.class)
+   public Result listaTareasId(Long idUsuario) {
+      String connectedUserStr = session("connected");
+      Long connectedUser =  Long.valueOf(connectedUserStr);
+      if (connectedUser != idUsuario) {
+         return unauthorized("Lo siento, no estás autorizado");
+      } else {
+         String aviso = flash("aviso");
+         Usuario usuario = usuarioService.findUsuarioPorId(idUsuario);
+         List<Tarea> tareas = tareaService.allTareasUsuario(idUsuario);
+         Collections.sort(tareas, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+         return ok(tareasPorId.render(tareas, usuario, aviso));
+      }
+   }
+
+   @Security.Authenticated(ActionAuthenticator.class)
+   public Result listaTareasNombre(Long idUsuario) {
+      String connectedUserStr = session("connected");
+      Long connectedUser =  Long.valueOf(connectedUserStr);
+      if (connectedUser != idUsuario) {
+         return unauthorized("Lo siento, no estás autorizado");
+      } else {
+         String aviso = flash("aviso");
+         Usuario usuario = usuarioService.findUsuarioPorId(idUsuario);
+         List<Tarea> tareas = tareaService.allTareasUsuario(idUsuario);
+         Collections.sort(tareas, (a, b) -> a.getTitulo().compareTo(b.getTitulo())<0 ? -1 : a.getTitulo().compareTo(b.getTitulo())==0 ? 0 : 1);
+         return ok(tareasPorNombre.render(tareas, usuario, aviso));
       }
    }
 

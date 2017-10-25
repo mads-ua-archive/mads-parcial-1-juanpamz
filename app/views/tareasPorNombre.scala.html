@@ -22,8 +22,6 @@
             <th>Tareas</th>
             <th>Acción</th>
         </tr>
-        <a href="@routes.GestionTareasController.listaTareasId(usuario.getId())">Tareas ordenadas por id</a>
-        <a href="@routes.GestionTareasController.listaTareasNombre(usuario.getId())">Tareas ordenadas por titulo</a>
     @for(tarea <- tareas) {
         <tr>
             <td>@tarea.getTitulo()</td>
